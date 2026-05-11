@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{ background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%);}
+        .cont{
+            display: flex;
+             background: linear-gradient(145deg, #ffffff, #f0f7ff);
+            
+            justify-content: space-between;
+            width: 95%;
+            margin: auto;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid yellow;
+            gap: 5px;
+        }
+        .card {
+            background: #fef9e8;
+            border-radius: 28px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            min-width: 110px;
+            border: 1px solid #000;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            transform: scale(1.1,1.1);
+        }
+        p{text-align: center; padding: 4px;
+            background: palegreen;
+            border: 1px solid green;
+        }
+        button+p{background-color: aqua;}
+        button{padding: 20px; background: yellow;
+            border: 10px double red;
+            margin: 20px;
+            border-radius: 15px;
+            }
+        button:hover{outline: dotted red;
+            transform: scale(1.2, 1.5);}
+        main{ background: linear-gradient(145deg, #ffffff, #f0f7ff);
+            
+            width: 80%;
+            margin: auto;
+        padding: 20px;}
+    </style>
+</head>
+<body>
+    <div class="cont">
+        <div class="card">
+        <button id="myButton">⚡ click</button>
+        <p>CLICK</p>
+        <p class="myButton">Сообщу о клике</p>
+    </div>
+    <div class="card">
+        <button id="myButtonDBL">⏩ dblclick</button>
+        <p>DBLCLICK</p>
+        <p class="myButtonDBL">Сообщу о двойном</p>
+    </div>
+    <div class="card">
+        <button id="myButtonOV">🔁 hover</button>
+        <p>OVER / OUT</p>
+        <p class="myButtonOV">Сообщу о наведении</p>
+    </div>
+    <div class="card">
+        <button id="myButtonM">🖱️ move</button>
+        <p>MOVE</p>
+        <p class="myButtonM">Сообщу о движении</p>
+    </div>
+    <div class="card">
+        <button id="myButtonC">👇 press / up</button>
+        <p>DOWN / UP</p>
+        <p class="myButtonC">Сообщу о нажатии</p>
+    </div>
+</div>
+    <main>
+        <div>В JavaScript основным способом работы с мышью являются события.
+Для этой задачи предусмотрено их великое множество, но в этой теме
+мы не станем рассматривать все подряд, а вместо этого сфокусируемся
+на самых популярных:</div>
+<ul>
+    
+    <li>click</li>
+    <li>dblclick</li>
+    <li>mouseover</li>
+    <li>mouseout</li>
+    <li>mouseenter</li>
+    <li>mouseleave</li>
+    <li>mousedown</li>
+    <li>mouseup</li>
+    <li>mousemove</li>
+    <li>contextmenu</li>
+    <li>mousewheel и DOMMouseScroll</li>
+</ul>
+    </main>
+    <script>
+       let button = document.querySelector("#myButton");
+        let pClick = document.querySelector(".myButton"); // параграф для вывода
+
+        button.addEventListener("click", function(e) {
+            console.log("Mouse clicked on something!");
+            pClick.textContent = "✅ Клик! (click)";
+            pClick.style.backgroundColor = "red";
+            // через 1.5 секунды вернём исходный текст
+            setTimeout(() => {
+                if (pClick.textContent === "✅ Клик! (click)") {
+                    pClick.textContent = "Сообщу о клике";
+                    pClick.style.backgroundColor = "";
+                }
+            }, 1500);
+        });
+
+
+  // ========== 2. DBLCLICK (двойной клик) ==========
+        let buttonDBL = document.querySelector("#myButtonDBL");
+        let pDbl = document.querySelector(".myButtonDBL");
+
+        buttonDBL.addEventListener("dblclick", function(e) {
+            console.log("Mouse clicked twice!");
+            pDbl.textContent = "⏩ Двойной клик! (dblclick)";
+            pDbl.style.backgroundColor = "red";
+            setTimeout(() => {
+                if (pDbl.textContent === "⏩ Двойной клик! (dblclick)") {
+                    pDbl.textContent = "Сообщу о двойном";
+                    pDbl.style.backgroundColor = "";
+                }
+            }, 1500);
+        });
+
+ // ========== 3. MOUSEOVER / MOUSEOUT (наведение и уход) ==========
+        let buttonOV = document.querySelector("#myButtonOV");
+        let pOver = document.querySelector(".myButtonOV");
+
+        buttonOV.addEventListener("mouseover", function(e) {
+            console.log("Hovered!");
+            pOver.textContent = "🔁 Мышь на кнопке (mouseover)";
+            pOver.style.backgroundColor = "red";
+        });
+
+        buttonOV.addEventListener("mouseout", function(e) {
+            console.log("Hovered Away!");
+            pOver.textContent = "🚪 Мышь ушла (mouseout)";
+            setTimeout(() => {
+                if (pOver.textContent === "🚪 Мышь ушла (mouseout)") {
+                    pOver.textContent = "Сообщу о наведении";
+                    pOver.style.backgroundColor = "";
+                }
+            }, 1500);
+        });
+
+// ========== 4. MOUSEMOVE (движение мыши) ==========
+        let buttonM = document.querySelector("#myButtonM");
+        let pMove = document.querySelector(".myButtonM");
+        let moveCounter = 0;
+
+        buttonM.addEventListener("mousemove", function(e) {
+            moveCounter++;
+            console.log("Mouse is moving! #" + moveCounter);
+            pMove.textContent = `🖱️ Движение #${moveCounter} (mousemove)`;
+            pMove.style.backgroundColor = "red";
+            // сбрасываем текст через короткое время
+            setTimeout(() => {
+                if (pMove.textContent.includes("Движение")) {
+                    pMove.textContent = "Сообщу о движении";
+                    pMove.style.backgroundColor = "";
+                }
+            }, 800);
+        });
+
+// ========== 5. MOUSEDOWN / MOUSEUP / CLICK (нажатие и отпускание) ==========
+       // ========== 5. MOUSEDOWN / MOUSEUP / CLICK (три события) ==========
+let buttonC = document.querySelector("#myButtonC");
+let pPress = document.querySelector(".myButtonC");
+
+// Событие 1: нажатие кнопки мыши
+buttonC.addEventListener("mousedown", function(e) {
+    console.log("Mouse is DOWN!");
+    pPress.textContent = "👇 Нажата (mousedown)";
+    pPress.style.backgroundColor = "red";
+    setTimeout(() => {
+        if (pPress.textContent === "👇 Нажата (mousedown)") {
+            pPress.textContent = "Сообщу о нажатии";
+            pPress.style.backgroundColor = "";
+        }
+    }, 1500);
+});
+
+// Событие 2: отпускание кнопки мыши
+buttonC.addEventListener("mouseup", function(e) {
+    console.log("Mouse is UP!");
+    pPress.textContent = "👍 Отпущена (mouseup)";
+    pPress.style.backgroundColor = "red";
+    setTimeout(() => {
+        if (pPress.textContent === "👍 Отпущена (mouseup)") {
+            pPress.textContent = "Сообщу о нажатии";
+            pPress.style.backgroundColor = "";
+        }
+    }, 1500);
+});
+
+// Событие 3: полный клик (нажатие + отпускание)
+buttonC.addEventListener("click", function(e) {
+    console.log("Full CLICK event!");
+    // pPress.textContent = "✅ Полный клик! (click)";
+    // setTimeout(() => {
+    //     if (pPress.textContent === "✅ Полный клик! (click)") {
+    //         pPress.textContent = "Сообщу о нажатии";
+    //     }
+    // }, 1500);
+});
+
+
+//  предотвратить встроенное поведение,
+// при котором появляется контекстное меню:
+document.addEventListener("contextmenu", hideMenu, false);
+function hideMenu(e) {
+ e.preventDefault();
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      body{background-color: aliceblue;}
+      .line{
+        background: #f6e7e7;
+        width: 90%;
+        margin: auto;
+        padding: 50px;
+      }
+      h1{
+        text-align: center;
+        color: #ba9312;
+        background: #fef9e8;
+        width: 50%;
+        margin: auto;
+        margin-bottom: 20px;
+      }
+      img{width: 400px;
+      border: 1px solid #f09d9d;}
+      .cont{display: flex;gap: 10px;
+      justify-content: space-around;}
+      .car{background: #fef9e8;
+        border: 1px solid #fbecbc;
+            border-radius: 28px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+          width: 45%;}
+          p{
+            padding: 10px;
+          }
+span{background: lavenderblush;
+width: 150px;
+padding: 20px;
+border: 1px solid red;
+border-radius: 10px;}
+       
+    </style>
+</head>
+<body>
+  <div class="line">
+  
+  <h1>Глобальная позиция мыши</h1>
+  <div class="cont">
+    <div class="car">
+  
+  <p>
+    Свойства screenX и screenY возвращают расстояние, на котором находится курсор мыши от левого верхнего угла основного монитора:
+  </p>
+  <img src="pozitionMouse.png" alt="">
+  
+</div>
+<div class="car">
+  <p>Вот очень простой пример использования screenX и screenY:
+
+</p>
+<p><span></span></p>
+<p><code></code>
+  <pre>
+document.addEventListener("mousemove", mouseMoving, false);
+function mouseMoving(e) {
+    console.log(e.screenX + " " + e.screenY); 
+}
+
+</pre></code>
+</p>
+</div>
+</div>
+
+</div>
+<script>
+  let span = document.querySelector('span')
+  document.addEventListener("mousemove", mouseMoving, false);
+function mouseMoving(e) {
+    console.log(e.screenX + " " + e.screenY);
+    span.textContent = "ПОЗИЦИЯ МЫШИ "+ e.screenX + " " + e.screenY
+   
+}
+  
+</script>
+ 
+</body>
+</html>
