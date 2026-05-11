@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{ background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%);}
+        .cont{
+            display: flex;
+             background: linear-gradient(145deg, #ffffff, #f0f7ff);
+            
+            justify-content: space-between;
+            width: 95%;
+            margin: auto;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid yellow;
+            gap: 5px;
+        }
+        .card {
+            background: #fef9e8;
+            border-radius: 28px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+            min-width: 110px;
+            border: 1px solid #000;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            transform: scale(1.1,1.1);
+        }
+        p{text-align: center;}
+        button{padding: 20px; background: yellow;
+            border: 10px double red;
+            margin: 20px;
+            border-radius: 15px;
+            }
+        button:hover{outline: dotted red;
+            transform: scale(1.2, 1.5);}
+        main{ background: linear-gradient(145deg, #ffffff, #f0f7ff);
+            
+            width: 80%;
+            margin: auto;
+        padding: 20px;}
+    </style>
+</head>
+<body>
+    <div class="cont">
+        <div class="card">
+        <button id="myButton">⚡ click</button>
+        <p>CLICK</p>
+    </div>
+    <div class="card">
+        <button id="myButtonDBL">⏩ dblclick</button>
+        <p>DBLCLICK</p>
+    </div>
+    <div class="card">
+        <button id="myButtonOV">🔁 hover</button>
+        <p>OVER / OUT</p>
+    </div>
+    <div class="card">
+        <button id="myButtonM">🖱️ move</button>
+        <p>MOVE</p>
+    </div>
+    <div class="card">
+        <button id="myButtonC">👇 press / up</button>
+        <p>DOWN / UP</p>
+    </div>
+</div>
+    <main>
+        <p>В JavaScript основным способом работы с мышью являются события.
+Для этой задачи предусмотрено их великое множество, но в этой теме
+мы не станем рассматривать все подряд, а вместо этого сфокусируемся
+на самых популярных:</p>
+<ul>
+    
+    <li>click</li>
+    <li>dblclick</li>
+    <li>mouseover</li>
+    <li>mouseout</li>
+    <li>mouseenter</li>
+    <li>mouseleave</li>
+    <li>mousedown</li>
+    <li>mouseup</li>
+    <li>mousemove</li>
+    <li>contextmenu</li>
+    <li>mousewheel и DOMMouseScroll</li>
+</ul>
+    </main>
+    <script>
+        let button = document.querySelector("#myButton");
+button.addEventListener("click", doSomething, false);
+function doSomething(e) {
+ console.log("Mouse clicked on something!");
+}
+
+let buttonDBL = document.querySelector("#myButtonDBL");
+buttonDBL.addEventListener("dblclick", doSomething, false);
+function doSomething(e) {
+ console.log("Mouse clicked on something...twice!");
+}
+
+// mouseover
+let buttonOV = document.querySelector("#myButtonOV");
+buttonOV.addEventListener("mouseover", hovered, false);
+buttonOV.addEventListener("mouseout", hoveredOut, false);
+function hovered(e) {
+ console.log("Hovered!");
+}
+function hoveredOut(e) {
+ console.log("Hovered Away!");
+}
+
+// Mouse is on the run!
+
+let buttonM = document.querySelector("#myButtonM");
+buttonM.addEventListener("mousemove", mouseIsMoving, false);
+function mouseIsMoving(e) {
+ console.log("Mouse is on the run!");
+}
+
+// Mouse is clicked!
+let buttonC = document.querySelector("#myButtonC");
+buttonC.addEventListener("mousedown", mousePressed, false);
+buttonC.addEventListener("mouseup", mouseReleased, false);
+buttonC.addEventListener("click", mouseClicked, false);
+function mousePressed(e) {
+ console.log("Mouse is down!");
+}
+function mouseReleased(e) {
+ console.log("Mouse is up!");
+}
+function mouseClicked(e) {
+ console.log("Mouse is clicked!");
+}
+//  предотвратить встроенное поведение,
+// при котором появляется контекстное меню:
+document.addEventListener("contextmenu", hideMenu, false);
+function hideMenu(e) {
+ e.preventDefault();
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%);
+            cursor: none; /* скрываем стандартный курсор */
+        }
+        
+        /* Жёлтое пятно-след за курсором */
+        .cursor-spot {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 0, 0.5); /* жёлтый с прозрачностью */
+            border-radius: 50%;
+            pointer-events: none; /* чтобы пятно не мешало кликам */
+            transform: translate(-50%, -50%); /* центрируем относительно курсора */
+            transition: all 0.05s linear; /* плавное движение */
+            z-index: 9999;
+            box-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
+        }
+        
+        
+        span{background: lavenderblush; margin: auto; 
+            margin-top: 100px;
+width: 150px;
+padding: 20px;
+border: 1px solid red;
+border-radius: 10px;}
+    </style>
+</head>
+<body>
+
+    <span style="display: block; text-align: center; font-size: 18px; padding: 20px;">
+        🖱️ Двигайте мышью — жёлтое пятно следует за курсором
+    </span>
+
+    <script>
+        // Создаём жёлтое пятно
+        let spot = document.createElement('div');
+        spot.className = 'cursor-spot';
+        document.body.appendChild(spot);
+        
+        let span = document.querySelector('span');
+        
+        document.addEventListener("mousemove", mouseMoving, false);
+        
+        function mouseMoving(e) {
+            // Координаты мыши (screenX/screenY)
+            console.log(e.screenX + " " + e.screenY);
+            
+            // Обновляем текст в span
+            if (span) {
+                span.textContent = "ПОЗИЦИЯ МЫШИ " + e.screenX + " " + e.screenY;
+            }
+            
+            // Перемещаем жёлтое пятно к курсору
+            spot.style.left = e.clientX + 'px';
+            spot.style.top = e.clientY + 'px';
+        }
+    </script>
+</body>
+</html>
