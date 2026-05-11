@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <title>Список дел - продвинутая версия</title>
+    <link href="style5.css" rel="stylesheet">
+    <style>
+        /* Дополнительные стили для новых функций */
+        .todo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        
+        .task-counter {
+            font-size: 14px;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .delete-all-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .delete-all-btn:hover {
+            background: #cc0000;
+            transform: scale(1.02);
+        }
+        
+        .delete-all-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        /* Стили для редактирования */
+        .editing {
+            border: 2px solid #4CAF50;
+            background: #fffde7;
+        }
+        
+        .edit-input {
+            width: 100%;
+            padding: 5px;
+            font-size: 14px;
+            border: 1px solid #4CAF50;
+            border-radius: 3px;
+        }
+        
+        .todo-list-item.editing-mode .task-text {
+            display: none;
+        }
+        
+        .todo-list-item .edit-controls {
+            display: none;
+            gap: 5px;
+            margin-left: 10px;
+        }
+        
+        .todo-list-item.editing-mode .edit-controls {
+            display: inline-flex;
+        }
+        
+        .save-edit, .cancel-edit {
+            padding: 2px 8px;
+            font-size: 12px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .save-edit {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .cancel-edit {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .todo-list-item {
+            cursor: pointer;
+        }
+        
+        .todo-list-item.dblclick-hint {
+            position: relative;
+        }
+        
+        .todo-list-item.dblclick-hint:hover::after {
+            content: "✏️ двойной клик для редактирования";
+            position: absolute;
+            right: 10px;
+            font-size: 11px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="visually-hidden">Список дел</h1>
+    
+    <!-- Верхняя панель со счётчиком и кнопкой удаления -->
+    <div class="todo-header">
+        <div class="task-counter" id="taskCounter">Осталось задач: 0</div>
+        <button class="delete-all-btn" id="deleteAllBtn" disabled>🗑️ Удалить все задачи</button>
+    </div>
+    
+    <ul class="todo-list" id="todoList">
+        <li class="todo-list-item">
+            <label>
+                <input class="todo-list-input" type="checkbox">
+                <span class="task-text">Покормить кота</span>
+            </label>
+        </li>
+        <li class="todo-list-item">
+            <label>
+                <input class="todo-list-input" type="checkbox">
+                <span class="task-text">Уехать из страны</span>
+            </label>
+        </li>
+        <li class="todo-list-item">
+            <label>
+                <input class="todo-list-input" type="checkbox">
+                <span class="task-text">Вдариться в бега</span>
+            </label>
+        </li>
+    </ul>
+    
+    <p class="empty-tasks hidden">✨ Все задачи выполнены. Новых задач нет. ✨</p>
+    
+    <form class="add-form" method="post">
+        <input class="add-form-input" type="text" aria-label="Описание задачи" placeholder="Например, купить слона" required>
+        <button class="add-form-button" type="submit">➕ Добавить задачу</button>
+    </form>
+
+    <template id="task-template">
+        <li class="todo-list-item">
+            <label>
+                <input type="checkbox" class="todo-list-input">
+                <span class="task-text"></span>
+            </label>
+            <div class="edit-controls">
+                <button class="save-edit">💾 Сохранить</button>
+                <button class="cancel-edit">❌ Отмена</button>
+            </div>
+        </li>
+    </template>
+    
+    <script>
+        // ========== ПОЛУЧАЕМ ЭЛЕМЕНТЫ ==========
+        const form = document.querySelector('.add-form');
+        const input = document.querySelector('.add-form-input');
+        const todoList = document.querySelector('.todo-list');
+        const emptyMessage = document.querySelector('.empty-tasks');
+        const template = document.getElementById('task-template');
+        const taskCounter = document.getElementById('taskCounter');
+        const deleteAllBtn = document.getElementById('deleteAllBtn');
+        
+        // Переменная для хранения текущей редактируемой задачи
+        let currentEditingItem = null;
+        
+        // ========== ФУНКЦИЯ ОБНОВЛЕНИЯ СЧЁТЧИКА И КНОПКИ ==========
+        function updateCounterAndButton() {
+            const items = document.querySelectorAll('.todo-list-item');
+            const activeItems = document.querySelectorAll('.todo-list-item:not(.completed)');
+            const count = activeItems.length;
+            
+            // Обновляем счётчик
+            if (taskCounter) {
+                taskCounter.textContent = `📋 Осталось задач: ${count}`;
+            }
+            
+            // Обновляем кнопку "Удалить все"
+            if (deleteAllBtn) {
+                if (items.length === 0) {
+                    deleteAllBtn.disabled = true;
+                } else {
+                    deleteAllBtn.disabled = false;
+                }
+            }
+            
+            // Обновляем сообщение о пустом списке
+            if (emptyMessage) {
+                if (items.length === 0) {
+                    emptyMessage.classList.remove('hidden');
+                } else {
+                    emptyMessage.classList.add('hidden');
+                }
+            }
+        }
+        
+        // ========== ФУНКЦИЯ УДАЛЕНИЯ ВСЕХ ЗАДАЧ ==========
+        function deleteAllTasks() {
+            if (confirm('⚠️ Вы уверены, что хотите удалить ВСЕ задачи? Это действие нельзя отменить!')) {
+                const items = document.querySelectorAll('.todo-list-item');
+                items.forEach(item => item.remove());
+                updateCounterAndButton();
+                
+                // Показываем уведомление
+                showNotification('Все задачи удалены', '#ff4444');
+            }
+        }
+        
+        // ========== ФУНКЦИЯ ПОКАЗА УВЕДОМЛЕНИЯ ==========
+        function showNotification(message, color = '#4CAF50') {
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: ${color};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                font-size: 14px;
+                z-index: 1000;
+                animation: slideIn 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            `;
+            
+            // Добавляем стиль анимации, если его нет
+            if (!document.querySelector('#notification-style')) {
+                const style = document.createElement('style');
+                style.id = 'notification-style';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from {
+                            transform: translateX(100%);
+                            opacity: 0;
+                        }
+                        to {
+                            transform: translateX(0);
+                            opacity: 1;
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Удаляем уведомление через 2 секунды
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+        
+        // ========== ФУНКЦИЯ РЕДАКТИРОВАНИЯ ЗАДАЧИ ==========
+        function editTask(taskItem) {
+            // Если уже редактируется другая задача, сохраняем её
+            if (currentEditingItem && currentEditingItem !== taskItem) {
+                cancelEditing(currentEditingItem);
+            }
+            
+            // Находим текстовый элемент
+            const taskSpan = taskItem.querySelector('.task-text');
+            const label = taskItem.querySelector('label');
+            const editControls = taskItem.querySelector('.edit-controls');
+            
+            if (!taskSpan || !editControls) return;
+            
+            const originalText = taskSpan.textContent;
+            
+            // Создаём поле ввода
+            const editInput = document.createElement('input');
+            editInput.type = 'text';
+            editInput.value = originalText;
+            editInput.className = 'edit-input';
+            
+            // Сохраняем оригинальный текст для отмены
+            editInput.dataset.originalText = originalText;
+            
+            // Скрываем span и показываем поле ввода
+            taskSpan.style.display = 'none';
+            label.insertBefore(editInput, taskSpan.nextSibling);
+            
+            // Добавляем класс редактирования
+            taskItem.classList.add('editing-mode');
+            currentEditingItem = taskItem;
+            
+            // Фокусируемся на поле ввода
+            editInput.focus();
+            editInput.select();
+            
+            // Функция сохранения
+            function saveEdit() {
+                const newText = editInput.value.trim();
+                if (newText !== '') {
+                    taskSpan.textContent = newText;
+                    showNotification('✅ Задача обновлена', '#4CAF50');
+                } else {
+                    showNotification('❌ Текст не может быть пустым', '#ff9800');
+                }
+                
+                // Убираем поле ввода
+                editInput.remove();
+                taskSpan.style.display = '';
+                taskItem.classList.remove('editing-mode');
+                currentEditingItem = null;
+            }
+            
+            // Функция отмены
+            function cancelEdit() {
+                editInput.remove();
+                taskSpan.style.display = '';
+                taskItem.classList.remove('editing-mode');
+                currentEditingItem = null;
+            }
+            
+            // Обработчики для кнопок сохранения/отмены
+            const saveBtn = editControls.querySelector('.save-edit');
+            const cancelBtn = editControls.querySelector('.cancel-edit');
+            
+            // Удаляем старые обработчики, чтобы не накапливались
+            const newSaveBtn = saveBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+            
+            newSaveBtn.addEventListener('click', () => {
+                saveEdit();
+                updateCounterAndButton();
+            });
+            
+            newCancelBtn.addEventListener('click', () => {
+                cancelEdit();
+                updateCounterAndButton();
+            });
+            
+            // Сохранение по Enter
+            editInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveEdit();
+                    updateCounterAndButton();
+                }
+            });
+            
+            // Отмена по Escape
+            editInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    cancelEdit();
+                }
+            });
+        }
+        
+        function cancelEditing(taskItem) {
+            const taskSpan = taskItem.querySelector('.task-text');
+            const editInput = taskItem.querySelector('.edit-input');
+            if (editInput) {
+                editInput.remove();
+            }
+            if (taskSpan) {
+                taskSpan.style.display = '';
+            }
+            taskItem.classList.remove('editing-mode');
+            currentEditingItem = null;
+        }
+        
+        // ========== ФУНКЦИЯ ДОБАВЛЕНИЯ НОВОЙ ЗАДАЧИ ==========
+        function addTask(taskText) {
+            // Клонируем шаблон
+            const newTask = template.content.cloneNode(true);
+            const taskItem = newTask.querySelector('.todo-list-item');
+            const taskSpan = newTask.querySelector('.task-text');
+            const taskCheckbox = newTask.querySelector('.todo-list-input');
+            const editControls = newTask.querySelector('.edit-controls');
+            
+            // Заполняем текст задачи
+            taskSpan.textContent = taskText;
+            
+            // Добавляем обработчик для удаления при нажатии на чекбокс
+            taskCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    // Добавляем анимацию удаления
+                    taskItem.style.transition = 'opacity 0.3s';
+                    taskItem.style.opacity = '0';
+                    setTimeout(() => {
+                        taskItem.remove();
+                        updateCounterAndButton();
+                        showNotification('✅ Задача выполнена!', '#4CAF50');
+                    }, 200);
+                }
+            });
+            
+            // Добавляем обработчик двойного клика для редактирования
+            taskItem.addEventListener('dblclick', (e) => {
+                // Не редактируем, если кликнули по чекбоксу или кнопкам
+                if (!e.target.classList.contains('todo-list-input') && 
+                    !e.target.classList.contains('save-edit') && 
+                    !e.target.classList.contains('cancel-edit')) {
+                    editTask(taskItem);
+                }
+            });
+            
+            // Добавляем задачу в список
+            todoList.appendChild(taskItem);
+            updateCounterAndButton();
+            showNotification(`✨ Добавлена задача: "${taskText}"`, '#4CAF50');
+        }
+        
+        // ========== НАСТРОЙКА ОБРАБОТЧИКОВ ДЛЯ СУЩЕСТВУЮЩИХ ЗАДАЧ ==========
+        function setupExistingTasks() {
+            document.querySelectorAll('.todo-list-item').forEach(item => {
+                const checkbox = item.querySelector('.todo-list-input');
+                const taskSpan = item.querySelector('.task-text');
+                
+                // Добавляем edit-controls, если их нет
+                if (!item.querySelector('.edit-controls')) {
+                    const controls = document.createElement('div');
+                    controls.className = 'edit-controls';
+                    controls.innerHTML = `
+                        <button class="save-edit">💾 Сохранить</button>
+                        <button class="cancel-edit">❌ Отмена</button>
+                    `;
+                    item.appendChild(controls);
+                }
+                
+                // Обработчик для чекбокса
+                if (checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            item.style.transition = 'opacity 0.3s';
+                            item.style.opacity = '0';
+                            setTimeout(() => {
+                                item.remove();
+                                updateCounterAndButton();
+                                showNotification('✅ Задача выполнена!', '#4CAF50');
+                            }, 200);
+                        }
+                    });
+                }
+                
+                // Обработчик двойного клика
+                item.addEventListener('dblclick', (e) => {
+                    if (!e.target.classList.contains('todo-list-input') && 
+                        !e.target.classList.contains('save-edit') && 
+                        !e.target.classList.contains('cancel-edit')) {
+                        editTask(item);
+                    }
+                });
+            });
+        }
+        
+        // ========== ОБРАБОТЧИК ОТПРАВКИ ФОРМЫ ==========
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const taskText = input.value.trim();
+            
+            if (taskText !== '') {
+                addTask(taskText);
+                input.value = '';
+                input.focus();
+            } else {
+                showNotification('⚠️ Введите текст задачи', '#ff9800');
+            }
+        });
+        
+        // ========== ОБРАБОТЧИК КНОПКИ "УДАЛИТЬ ВСЕ" ==========
+        if (deleteAllBtn) {
+            deleteAllBtn.addEventListener('click', deleteAllTasks);
+        }
+        
+        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        setupExistingTasks();
+        updateCounterAndButton();
+        
+        // Добавляем подсказку для существующих задач
+        document.querySelectorAll('.todo-list-item').forEach(item => {
+            item.classList.add('dblclick-hint');
+        });
+    </script>
+</body>
+</html>

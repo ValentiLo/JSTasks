@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Витрина товаров</title>
+    <link rel="stylesheet" href="style6.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🛍️ Витрина товаров</h1>
+            <div class="cart-info">
+                <span id="cart-count">0</span> товаров в корзине
+                <button id="view-cart-btn">Корзина</button>
+            </div>
+        </header>
+
+        <div class="filters">
+            <select id="category-filter">
+                <option value="all">Все категории</option>
+                <option value="electronics">Электроника</option>
+                <option value="clothing">Одежда</option>
+                <option value="shoes">Обувь</option>
+                <option value="books">Книги</option>
+            </select>
+            
+            <select id="sort-by">
+                <option value="name">По названию</option>
+                <option value="price-asc">По цене (возр.)</option>
+                <option value="price-desc">По цене (убыв.)</option>
+                <option value="rating">По рейтингу</option>
+            </select>
+
+            <input type="text" id="search-input" placeholder="Поиск товаров...">
+        </div>
+
+        <div class="products-grid" id="products-container">
+            <!-- Товары будут загружены через JavaScript -->
+        </div>
+
+        <!-- Модальное окно корзины -->
+        <div id="cart-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>🛒 Ваша корзина</h2>
+                <div id="cart-items"></div>
+                <div class="cart-total">
+                    <strong>Итого: <span id="total-price">0</span> руб.</strong>
+                    <button id="checkout-btn">Оформить заказ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script6.js"></script>
+</body>
+</html>
