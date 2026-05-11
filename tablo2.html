@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basketball Scoreboard</title>
+    <style> 
+        @font-face {
+            font-family: 'Cursed Timer ULiL';
+            src: url("CursedTimerUlil.ttf") format('truetype');
+        }
+        
+        .empty-state {
+            position: relative;
+            background-color: #1B244A;
+            width: 575px;
+            height: 450px;
+        }
+        
+        .home {
+            position: absolute;
+            left: 85px;
+            top: 48px;
+        }
+        
+        .guest {
+            position: absolute;
+            left: 340px;
+            top: 48px;
+        }
+        
+        .titleG, .titleH {
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: 700;
+            font-size: 40px;
+            text-align: center;
+            color: white;
+            margin: 0 0 15px 0;
+        }
+        
+        .scoreH, .scoreG {
+            background: #080001;
+            width: 155px;
+            height: 120px;
+            color: #F94F6D;
+            font-family: 'Cursed Timer ULiL', monospace;
+            font-weight: 400;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 90px;
+            line-height: 120px;
+            border-radius: 10px;
+        }
+        
+        .buttons {
+            width: 155px;
+            height: 45px;
+            margin-top: 20px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .btn-add, .btn-subtract {
+            width: 45px;
+            height: 45px;
+            border-radius: 5px;
+            font-family: 'Cursed Timer ULiL', monospace;
+            font-weight: 400;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid #9AABD8;
+            background: transparent;
+            color: #9AABD8;
+            transition: all 0.2s;
+        }
+        
+        .btn-add:hover, .btn-subtract:hover {
+            background: #9AABD8;
+            color: #1B244A;
+            transform: scale(1.05);
+        }
+        
+        .btn-add:active, .btn-subtract:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <div class="empty-state">
+        <!-- HOME -->
+        <div class="home">
+            <p class="titleH">HOME</p>
+            <p class="scoreH" id="homeScore">0</p>
+            <div class="buttons">
+                <button class="btn-add" data-team="home" data-points="1">+1</button>
+                <button class="btn-add" data-team="home" data-points="2">+2</button>
+                <button class="btn-add" data-team="home" data-points="3">+3</button>
+                <button class="btn-subtract" data-team="home" data-points="-1">-1</button>
+            </div>
+        </div>
+        
+        <!-- GUEST -->
+        <div class="guest">
+            <p class="titleG">GUEST</p>
+            <p class="scoreG" id="guestScore">0</p>
+            <div class="buttons">
+                <button class="btn-add" data-team="guest" data-points="1">+1</button>
+                <button class="btn-add" data-team="guest" data-points="2">+2</button>
+                <button class="btn-add" data-team="guest" data-points="3">+3</button>
+                <button class="btn-subtract" data-team="guest" data-points="-1">-1</button>
+            </div>
+        </div>
+    </div>
+<button id="myButton">HERE</button>
+    <script>
+        let button = document.querySelector("#myButton");
+button.addEventListener("mousedown", mousePressed, false);
+button.addEventListener("mouseup", mouseReleased, false);
+button.addEventListener("click", mouseClicked, false);
+function mousePressed(e) {
+ console.log("Mouse is down!");
+}
+function mouseReleased(e) {
+ console.log("Mouse is up!");
+}
+function mouseClicked(e) {
+ console.log("Mouse is clicked!");
+}
+        // Получаем элементы для отображения счёта
+        let homeScoreEl = document.getElementById('homeScore');
+        let guestScoreEl = document.getElementById('guestScore');
+        
+        // Переменные для хранения счёта
+        let homeScore = 0;
+        let guestScore = 0;
+        
+        // Функция обновления счёта на странице
+        function updateScores() {
+            homeScoreEl.textContent = homeScore;
+            guestScoreEl.textContent = guestScore;
+        }
+        
+        // Функция добавления очков
+        function addPoints(team, points) {
+            if (team === 'home') {
+                homeScore += points;
+                if (homeScore < 0) homeScore = 0; // счёт не может быть отрицательным
+            } else if (team === 'guest') {
+                guestScore += points;
+                if (guestScore < 0) guestScore = 0;
+            }
+            updateScores();
+        }
+        
+        // Назначаем обработчики на все кнопки
+        document.querySelectorAll('.btn-add, .btn-subtract').forEach(button => {
+            button.addEventListener('click', function() {
+                const team = this.getAttribute('data-team');
+                const points = parseInt(this.getAttribute('data-points'));
+                addPoints(team, points);
+            });
+        });
+
+
+        let bodyElement = document.body;
+for (let i = 0; i < bodyElement.children.length; i++) {
+ let childElement = bodyElement.children[i];
+ document.writeln("Элемент " +i +" - " +childElement.tagName);}
+    </script>
+</body>
+</html>
