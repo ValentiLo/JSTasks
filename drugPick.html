@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .draggable {
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <a href="https://github.com/ValentiLo/UCHEBN05/blob/main/JAVASCRIPT/Клонирование.md">***********</a>
+    <div id="original" class="draggable" style="top: 50px; left: 50px;">Оригинал</div>
+
+    <script>
+        let currentDrag = null;
+        let offsetX, offsetY;
+
+        document.addEventListener('mousedown', (e) => {
+            const target = e.target.closest('.draggable');
+            if (!target) return;
+            
+            if (target.id === 'original') {
+                // Создаём клон
+                currentDrag = target.cloneNode(true);
+                currentDrag.id = '';
+                currentDrag.textContent = 'Клон';
+                currentDrag.style.background = 'blue';
+                document.body.appendChild(currentDrag);
+            } else {
+                currentDrag = target;
+            }
+            
+            // Позиционируем
+            const rect = currentDrag.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            
+            currentDrag.style.cursor = 'grabbing';
+            
+            function onMouseMove(e) {
+                if (!currentDrag) return;
+                currentDrag.style.left = (e.clientX - offsetX) + 'px';
+                currentDrag.style.top = (e.clientY - offsetY) + 'px';
+            }
+            
+            function onMouseUp() {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+                if (currentDrag && currentDrag.id !== 'original') {
+                    currentDrag.style.cursor = 'grab';
+                }
+                currentDrag = null;
+            }
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+    </script>
+</body>
+</html>

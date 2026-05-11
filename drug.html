@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #box {
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            cursor: grab;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="box"></div>
+
+    <script>
+        const box = document.getElementById('box');
+        let isDragging = false;
+        let startX, startY, startLeft, startTop;
+
+        box.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startLeft = box.offsetLeft;
+            startTop = box.offsetTop;
+            box.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            box.style.left = startLeft + (e.clientX - startX) + 'px';
+            box.style.top = startTop + (e.clientY - startY) + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            box.style.cursor = 'grab';
+        });
+    </script>
+</body>
+</html>

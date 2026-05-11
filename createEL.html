@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Creating Elements</title>
+ <style>
+ body {
+ background-color: #0E454C;
+ padding: 10px;
+ }
+
+ h1 {
+ color: #14FFF7;
+ font-size: 64px;
+ font-family: sans-serif;
+ text-decoration: underline;
+ }
+
+ div {
+    background: lavenderblush;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    color: #0E454C;
+    font-size: 18px;
+ }
+ .cont {
+    display: flex;
+    gap: 20px; 
+    justify-content: space-around;
+    align-items: stretch;
+ }
+ .cont > div {
+    flex: 1;  /* ← делает все дочерние div одинаковой ширины */
+    min-width: 0; /* чтобы содержимое не выламывало flex */
+}
+ .p {
+    background: #0E454C;
+    color: #14FFF7;
+    padding: 15px;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 200%;
+    margin: 0px;
+ }
+ .here {
+    background: #0E454C;
+    color: #14FFF7;
+    
+ }
+ .here h1 {
+    font-size: 28px;
+    text-decoration: none;
+   
+ }
+ .here p {
+    font-size: 18px;
+    margin: 0;
+ }
+ 
+ </style>
+</head>
+<body>
+    <div>Для интерактивных сайтов и приложений динамическое создание HTML-элементов и помещение их в DOM — вполне обыденная процедура.</div>
+    <div>Создавать элементы можно с помощью метода createElement, который работает достаточно просто. Он вызывается через объект document, и ему передается имя HTML-тега элемента, который нужно создать</div>
+    <div>В следующем фрагменте кода создается элемент абзаца, представленный буквой p:
+        <pre>let myElement = document.createElement("p");</pre>
+        Переменная myElement содержит ссылку на только что созданный элемент. 
+    </div>
+    <div>DOM не знает о существовании этого элемента, и, чтобы он стал полноценной частью DOM, нужно сделать две вещи:
+        <ol>
+            <li>Найти элемент, который выступит в качестве его родителя.</li>
+            <li>Использовать appendChild и присоединить элемент к этому родителю.</li>
+        </ol>
+    </div>
+    <div class="cont">
+        <div class="p">
+ let bodyElement = document.querySelector("body");<br>
+ let h1Element = document.createElement("h1");<br>
+ h1Element.textContent = "Do they speak English in 'What'?";<br>
+ bodyElement.appendChild(h1Element);<br>
+ let pElement = document.createElement("p");<br>
+ pElement.textContent = "I am adding some text here...like a boss!";<br>
+ bodyElement.appendChild(pElement);<br>
+        </div>
+        <div class="here">
+            <h3 style="color: #14FFF7; margin-bottom: 15px;">⬇️ Динамически созданные элементы появятся здесь ⬇️</h3>
+        </div>
+    </div>
+
+    <script>
+        // Находим контейнер, куда будем добавлять элементы
+        let container = document.querySelector(".here");
+        
+        // Создаём h1 элемент
+        let h1Element = document.createElement("h1");
+        h1Element.textContent = "Do they speak English in 'What'?";
+        
+        // Создаём p элемент
+        let pElement = document.createElement("p");
+        pElement.textContent = "I am adding some text here...like a boss!";
+        
+        // Добавляем оба элемента в контейнер
+        container.appendChild(h1Element);
+        container.appendChild(pElement);
+        
+        // Бонус: покажем в консоли, что создали
+        console.log("✅ Созданы и добавлены элементы:");
+        console.log("- h1 с текстом:", h1Element.textContent);
+        console.log("- p с текстом:", pElement.textContent);
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title>Random Color Generator!</title>
+ <style>
+ h2 {
+ font-family: Arial, Helvetica;
+ font-size: 80px;
+ color: #FFF;
+ text-shadow: 0px 0px 11px #333333;
+ margin: 0;
+ padding: 20px;
+ cursor: pointer;
+ }
+ 
+ button {
+    display: block;
+    margin: 20px auto;
+    padding: 15px 40px;
+    font-size: 24px;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: #333;
+    background: #FFF;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.2s;
+ }
+ 
+ button:hover {
+    transform: scale(1.05);
+ }
+ 
+ .color-code {
+    text-align: center;
+    font-family: monospace;
+    font-size: 24px;
+    color: white;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    margin: 20px auto;
+    width: fit-content;
+    border-radius: 10px;
+ }
+ </style>
+</head>
+<body>
+ <h2>Random
+ <br>Color
+ <br>Generator</h2>
+ 
+ <button id="colorButton">🎨 Сменить цвет</button>
+ <div class="color-code" id="colorCode"></div>
+ 
+ <script>
+    function getRandomColor() {
+        let r = Math.floor(Math.random() * 256);
+        let g = Math.floor(Math.random() * 256);
+        let b = Math.floor(Math.random() * 256);
+        return "rgb(" + r + ", " + g + ", " + b + ")";
+    }
+    
+    function changeColor() {
+        let newColor = getRandomColor();
+        document.body.style.backgroundColor = newColor;
+        document.getElementById("colorCode").textContent = newColor;
+    }
+    
+    changeColor(); // при загрузке
+    
+    document.querySelector("h2").addEventListener("click", changeColor);
+    document.getElementById("colorButton").addEventListener("click", changeColor);
+ </script>
+</body>
+</html>

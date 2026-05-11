@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>События мыши | Интерактивное обучение</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Контейнер для всей теории */
+        .theory-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Заголовок страницы */
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 48px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Карточки с теорией */
+        .theory-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .theory-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .theory-card h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            border-left: 5px solid #764ba2;
+            padding-left: 15px;
+        }
+
+        .theory-card h3 {
+            color: #764ba2;
+            margin: 15px 0 10px 0;
+        }
+
+        .theory-card p {
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .theory-card pre {
+            background: #1e1e1e;
+            color: #fdfbfb;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            width: 70%;
+        }
+
+        /* Блок для демонстрации */
+        .demo-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .demo-box h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Интерактивные элементы */
+        .b {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        #elem {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #elem:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        #hider {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.2s;
+        }
+
+        #hider:hover {
+            background: #ee5a5a;
+            transform: scale(1.05);
+        }
+
+        #showText {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.2s;
+        }
+
+        #showText:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
+        #text {
+            background: #f0f0f0;
+            padding: 20px;
+            margin: 15px auto;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        /* Таблица событий */
+        .events-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .events-table th,
+        .events-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .events-table th {
+            background: #667eea;
+            color: white;
+        }
+
+        .events-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .events-table tr:hover {
+            background: #f0f0f0;
+        }
+
+        /* Блок для кода */
+        .live-demo {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 32px; }
+            .theory-card h2 { font-size: 20px; }
+            .events-table { font-size: 12px; }
+            .theory-card pre { width: 95%; }
+        }
+        code{color: red;}
+        pre code{color: white;}
+    </style>
+</head>
+<body>
+    <div class="theory-container">
+        <h1>🎯 События мыши в JavaScript</h1>
+
+        <!-- Теоретическая карточка 1 -->
+        <div class="theory-card">
+            <h2>📖 Что такое события мыши?</h2>
+            <p>События мыши — это действия пользователя, которые происходят при взаимодействии с элементами страницы. JavaScript позволяет реагировать на эти события и выполнять определённый код.</p>
+            <h3>Основные типы событий мыши:</h3>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li><code>click</code> — однократное нажатие на элемент</li>
+                <li><code>dblclick</code> — двойное нажатие</li>
+                <li><code>mousedown</code> — кнопка мыши нажата</li>
+                <li><code>mouseup</code> — кнопка мыши отпущена</li>
+                <li><code>mousemove</code> — движение курсора</li>
+                <li><code>mouseover</code> / <code>mouseout</code> — наведение/уход курсора</li>
+                <li><code>contextmenu</code> — вызов контекстного меню (правый клик)</li>
+            </ul>
+        </div>
+
+        <!-- Теоретическая карточка 2 -->
+        <div class="theory-card">
+            <h2>🔧 Способы назначения обработчиков событий</h2>
+            
+            <h3>1. Через свойство DOM-элемента:</h3>
+            <pre><code>element.onclick = function() {
+    console.log('Клик!');
+};</code></pre>
+
+            <h3>2. Через метод addEventListener():</h3>
+            <pre><code>element.addEventListener('click', function() {
+    console.log('Клик!');
+});</code></pre>
+
+            <div class="note">
+                💡 <strong>Важно!</strong> <code>addEventListener()</code> — рекомендуемый способ, так как он позволяет добавить несколько обработчиков на одно событие.
+            </div>
+        </div>
+
+        <!-- Теоретическая карточка 3 -->
+        <div class="theory-card">
+            <h2>🎨 Класс Menu и обработка событий</h2>
+            <p>В вашем коде используется класс <code>Menu</code> с методом <code>handleEvent</code>. Это мощный подход, позволяющий обрабатывать разные типы событий в одном месте:</p>
+            <pre><code>class Menu {
+    handleEvent(event) {
+        switch(event.type) {
+            case 'mousedown':
+                console.log('Кнопка нажата');
+                break;
+            case 'mouseup':
+                console.log('Кнопка отпущена');
+                break;
+        }
+    }
+}
+
+let menu = new Menu();
+elem.addEventListener('mousedown', menu);
+elem.addEventListener('mouseup', menu);</code></pre>
+            <p>Преимущества:</p>
+            <ul style="margin-left: 20px;">
+                <li>✅ Весь код событий в одном месте</li>
+                <li>✅ Легко добавлять новые типы событий</li>
+                <li>✅ Удобно поддерживать и тестировать</li>
+            </ul>
+        </div>
+
+        <!-- Интерактивная демонстрация -->
+        <div class="demo-box">
+            <h3>🖱️ Интерактивная демонстрация</h3>
+            
+            <div class="b">
+                <div class="button-group">
+                    <button id="elem">Нажми меня (mousedown/mouseup)</button>
+                    <input type="button" id="hider" value="🔻 Спрятать текст" />
+                    <input type="button" id="showText" value="🔺 Вернуть текст" />
+                </div>
+                <div id="text">✨ Текст, который можно скрыть и вернуть ✨</div>
+            </div>
+
+            <div class="live-demo" id="demoLog">
+                👇 Результат взаимодействия появится здесь 👇
+            </div>
+        </div>
+
+        <!-- Теоретическая карточка 4 -->
+        <div class="theory-card">
+            <h2>📊 Таблица событий и их описание</h2>
+            <table class="events-table">
+                <thead>
+                    <tr><th>Событие</th><th>Когда срабатывает</th><th>Пример использования</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>click</code></td><td>Однократное нажатие</td><td>Отправка формы, открытие модального окна</td></tr>
+                    <tr><td><code>dblclick</code></td><td>Двойное нажатие</td><td>Редактирование текста</td></tr>
+                    <tr><td><code>mousedown</code></td><td>Нажатие кнопки мыши</td><td>Начало перетаскивания</td></tr>
+                    <tr><td><code>mouseup</code></td><td>Отпускание кнопки мыши</td><td>Завершение перетаскивания</td></tr>
+                    <tr><td><code>mousemove</code></td><td>Движение курсора</td><td>Создание эффекта слежения</td></tr>
+                </tbody>
+             </table>
+        </div>
+
+        <!-- Блок с полезными советами -->
+        <div class="theory-card">
+            <h2>💡 Полезные советы</h2>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li>🔹 Используйте <code>event.preventDefault()</code> для отмены стандартного поведения браузера</li>
+                <li>🔹 Свойство <code>event.target</code> возвращает элемент, на котором произошло событие</li>
+                <li>🔹 Свойство <code>this</code> внутри обработчика ссылается на элемент, к которому привязан обработчик</li>
+                <li>🔹 <code>hidden = true</code> — простой способ скрыть элемент</li>
+                <li>🔹 <code>hidden = false</code> — способ показать элемент</li>
+                <li>🔹 Для отладки используйте <code>console.log()</code> внутри обработчиков</li>
+            </ul>
+        </div>
+
+        <!-- Заключение -->
+        <div class="theory-card">
+            <h2>🎯 Заключение</h2>
+            <p>События мыши — основа интерактивности веб-страниц. Понимание того, как работают <code>mousedown</code>, <code>mouseup</code>, <code>click</code> и других событий, позволяет создавать отзывчивые и удобные интерфейсы.</p>
+            <p>Используйте классы с методом <code>handleEvent</code> для организации чистого и поддерживаемого кода!</p>
+        </div>
+    </div>
+
+    <script>
+        // Обновляем demoLog для отображения действий пользователя
+        let demoLog = document.getElementById('demoLog');
+        
+        // Функция для записи в лог
+        function logMessage(message) {
+            if (demoLog) {
+                demoLog.innerHTML += `<div>🖱️ ${message}</div>`;
+                // Автоматическая прокрутка вниз
+                demoLog.scrollTop = demoLog.scrollHeight;
+            }
+        }
+
+        // === Обработчики для демонстрации ===
+
+        let hiderButton = document.getElementById('hider');
+        let showButton = document.getElementById('showText');
+        let textElement = document.getElementById('text');
+        
+        // Скрытие текста
+        if (hiderButton) {
+            hiderButton.onclick = function() {
+                textElement.hidden = true;
+                logMessage('🔻 Текст скрыт (hidden = true)');
+            };
+        }
+
+        // ПОКАЗАТЬ текст (ВЕРНУТЬ)
+        if (showButton) {
+            showButton.onclick = function() {
+                textElement.hidden = false;
+                logMessage('🔺 Текст возвращён (hidden = false)');
+            };
+        }
+
+        // Класс Menu для обработки событий кнопки
+        class Menu {
+            handleEvent(event) {
+                let elem = document.getElementById('elem');
+                switch(event.type) {
+                    case 'mousedown':
+                        if (elem) {
+                            elem.innerHTML = "🔽 Кнопка НАЖАТА (mousedown)";
+                            logMessage('Событие: mousedown — кнопка мыши нажата');
+                        }
+                        break;
+                    case 'mouseup':
+                        if (elem) {
+                            elem.innerHTML = "🔼 Кнопка ОТПУЩЕНА (mouseup)";
+                            logMessage('Событие: mouseup — кнопка мыши отпущена');
+                            setTimeout(() => {
+                                if (elem) elem.innerHTML = "Нажми меня (mousedown/mouseup)";
+                            }, 1500);
+                        }
+                        break;
+                }
+            }
+        }
+
+        // Назначаем обработчики
+        let elemButton = document.getElementById('elem');
+        if (elemButton) {
+            let menu = new Menu();
+            elemButton.addEventListener('mousedown', menu);
+            elemButton.addEventListener('mouseup', menu);
+            
+            // Добавим также обработчик click для демонстрации
+            elemButton.addEventListener('click', function() {
+                logMessage('Событие: click — полный клик (нажатие + отпускание)');
+            });
+        }
+
+        // Инициализация при загрузке страницы
+        window.addEventListener('load', function() {
+            logMessage('✅ Страница загружена! Тестируйте события мыши.');
+        });
+    </script>
+</body>
+</html>
