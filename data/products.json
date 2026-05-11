@@ -1,0 +1,49 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Смартфон Samsung Galaxy",
+      "price": 25999,
+      "category": "electronics",
+      "image": "https://via.placeholder.com/300x300?text=Samsung",
+      "description": "Современный смартфон с отличной камерой",
+      "rating": 4.5
+    },
+    {
+      "id": 2,
+      "name": "Ноутбук ASUS VivoBook",
+      "price": 45999,
+      "category": "electronics",
+      "image": "https://via.placeholder.com/300x300?text=ASUS",
+      "description": "Легкий и производительный ноутбук",
+      "rating": 4.8
+    },
+    {
+      "id": 3,
+      "name": "Футболка хлопковая",
+      "price": 1299,
+      "category": "clothing",
+      "image": "https://via.placeholder.com/300x300?text=T-Shirt",
+      "description": "Удобная футболка из натурального хлопка",
+      "rating": 4.2
+    },
+    {
+      "id": 4,
+      "name": "Кроссовки Nike",
+      "price": 7999,
+      "category": "shoes",
+      "image": "https://via.placeholder.com/300x300?text=Nike",
+      "description": "Спортивные кроссовки для бега",
+      "rating": 4.7
+    },
+    {
+      "id": 5,
+      "name": "Книга 'JavaScript для начинающих'",
+      "price": 1599,
+      "category": "books",
+      "image": "https://via.placeholder.com/300x300?text=JS+Book",
+      "description": "Подробное руководство по JavaScript",
+      "rating": 4.9
+    }
+  ]
+}
